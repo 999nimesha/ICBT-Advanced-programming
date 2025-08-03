@@ -12,6 +12,7 @@ import com.insert.dao.UserDao;
 import com.insert.model.UserBean;
 
 
+
 @WebServlet("/LoginServlet")
 
 public class LoginServlet extends HttpServlet {
@@ -26,7 +27,7 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        String username = request.getParameter("user_name");
+        String username = request.getParameter("user_nam");
         String password = request.getParameter("user_pass");
 
         UserBean user = new UserBean(username, password);
