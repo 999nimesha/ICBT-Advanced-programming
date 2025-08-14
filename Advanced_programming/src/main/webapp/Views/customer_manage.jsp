@@ -109,7 +109,7 @@
 
             <div class="signup-image">
                 <figure>
-                    <img src="images/181340.jpg" alt="sign in image">
+                    <img src="images/girl-in-the-library-by-bookshelf-takes-a-book-vector-45788267.jpg" alt="sign in image">
                 </figure>
                 <a href="<%=request.getContextPath()%>/Views/dashboard.jsp" class="signin-image-link"><b><center>Back to DashBoard</center></b></a>
             </div>

@@ -116,7 +116,19 @@
 	
 	</script>
 
-	
+	<script>
+    const registerForm = document.getElementById('register-form');
+    const agreeCheckbox = document.getElementById('agree-term');
+
+    registerForm.addEventListener('submit', function(event) {
+        // Check if the checkbox is checked
+        if (!agreeCheckbox.checked) {
+            event.preventDefault(); // Stop form submission
+            alert("You must agree to the Terms of Service before registering!");
+            agreeCheckbox.focus(); // Focus on the checkbox
+        }
+    });
+</script>
 	<!-- JS -->
 	<script src="<%=request.getContextPath()%>/vendor/jquery/jquery.min.js"></script>
 	<script src="<%=request.getContextPath()%>/js/main.js"></script>

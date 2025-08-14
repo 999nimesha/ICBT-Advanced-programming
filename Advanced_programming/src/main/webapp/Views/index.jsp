@@ -63,7 +63,7 @@ html, body {
 
 					<div class="signin-form">
 						<h2 class="form-title">Sign in</h2>
-						<form method="post" action="LoginServlet" class="register-form"
+						<form method="post" action="<%=request.getContextPath()%>/LoginServlet" class="register-form"
 							id="login-form">
 							<div class="form-group">
 								<label for="username"><i
@@ -95,6 +95,17 @@ html, body {
 			</div>
 		</section>
 
+	<script>
+    const loginForm = document.getElementById('login-form');
+    const rememberCheckbox = document.getElementById('remember-me');
+
+    loginForm.addEventListener('submit', function(event) {
+        if (!rememberCheckbox.checked) {
+            event.preventDefault(); // Stop form submission
+            alert("You must tick the 'Remember me' checkbox before logging in!");
+        }
+    });
+</script>
 	
 
 	<!-- JS -->

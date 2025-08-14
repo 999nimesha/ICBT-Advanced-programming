@@ -27,18 +27,21 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        String username = request.getParameter("user_nam");
+        String username = request.getParameter("user_name");
         String password = request.getParameter("user_pass");
 
         UserBean user = new UserBean(username, password);
-
+        System.out.println(username);
+        System.out.println(password);
         try {
             if (userDAO.validate(user)) {
                 HttpSession session = request.getSession();
                 session.setAttribute("user_name", username);
+                System.out.println("adoo");
                 response.sendRedirect("Views/dashboard.jsp"); // redirect to success page
             } else {
-                response.sendRedirect("Views/index.jsp?error=true"); // redirect back with error
+                response.sendRedirect("Views/index.jsp?error=true"); // redirect back with err
+                System.out.println("n.qjsnxksx");
             }
         } catch (Exception e) {
             e.printStackTrace();
