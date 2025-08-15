@@ -1,44 +1,32 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.List" %>
-<%@ page import="com.insert.model.ShowUserBean" %>
-
+<%@ page import="com.insert.model.CusRegisterBean" %>
 <%
-    // Check if userList attribute is missing (means first direct load)
-    if (request.getAttribute("userList") == null) {
-%>
-    <jsp:forward page="/ShowUserServlet" />
-
-<%
-        return;
-    }
-
-    List<ShowUserBean> userList = (List<ShowUserBean>) request.getAttribute("userList");
+    List<CusRegisterBean> customerList = (List<CusRegisterBean>) request.getAttribute("customerList");
     String message = (String) request.getAttribute("message");
+
+    if (customerList == null) {
 %>
-
-
+    <jsp:forward page="/ShowCustomerServlet" />
+<%
+    }
+%>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>All Users</title>
-    <!-- Font Icon -->
-<link rel="stylesheet"
-	href="<%=request.getContextPath()%>/fonts/material-icon/css/material-design-iconic-font.min.css">
-
-<!-- Main css -->
-<link rel="stylesheet" href="<%=request.getContextPath()%>/css/style.css">
+    <title>Customer List</title>
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/fonts/material-icon/css/material-design-iconic-font.min.css">
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/css/style.css">
     <style>
         body {
-           
-        background-image: url('images/bookshop_bg.jpg'); 
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-        background-position: center;
-        min-height: 100vh;
-    }
-        
+            background-image: url('images/bookshop_bg.jpg'); 
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: center;
+            min-height: 100vh;
+        }
 
         .top-bar {
             width: 90%;
@@ -113,68 +101,56 @@
             border-radius: 4px;
             font-size: 14px;
         }
-        @media print {
-    table th:last-child,
-    table td:last-child {
-        display: none;
-    }
-}
     </style>
 </head>
 <body>
-
 <div style="width: 90%; margin: 20px auto; background-color: #e6f2ff; padding: 15px; border: 1px solid #b3d1ff; border-radius: 8px; text-align: center;">
-    <h2 style="color: blue; margin: 0;">All Registered Users</h2>
+    <h2 style="color: blue; margin: 0;">All Registered Customers</h2>
 </div>
-
-
+  
 <div class="top-bar">
-    <form class="search-form" action="<%=request.getContextPath()%>/ShowUserServlet" method="get">
-        <input type="text" name="search" placeholder="Search by name..."class="zmdi zmdi-search" />
+    <form class="search-form" action="<%=request.getContextPath()%>/ShowCustomerServlet" method="get">
+        <input type="text" name="search" placeholder="Search by NIC..." />
         <button type="submit">Search</button>
     </form>
-
     <a href="<%=request.getContextPath()%>/Views/dashboard.jsp" class="form-submit"><b>Back to Dashboard</b></a>
 </div>
- 
+
 <% if (message != null) { %>
     <div class="alert"><%= message %></div>
 <% } %>
 
 <table>
     <tr>
-        
-        <th>User Name</th>
+        <th>Name</th>
+        <th>NIC</th>
+        <th>Address</th>
+        <th>Hometown</th>
+        <th>Telephone</th>
         <th>Email</th>
-        <th>Password</th>
-        <th>Contact</th>
         <th>Actions</th>
     </tr>
-
     <%
-        if (userList != null && !userList.isEmpty()) {
-            for (ShowUserBean user : userList) {
+        if (customerList != null && !customerList.isEmpty()) {
+            for (CusRegisterBean cus : customerList) {
     %>
     <tr>
-        <td><%= user.getUser_name() %></td>
-        <td><%= user.getUser_email() %></td>
-        <td><%= user.getUser_pass() %></td>
-        <td><%= user.getUser_contact() %></td>
+        <td><%= cus.getCustomer_Name() %></td>
+        <td><%= cus.getCustomer_Nic() %></td>
+        <td><%= cus.getCustomer_Address() %></td>
+        <td><%= cus.getCustomer_Hometown() %></td>
+        <td><%= cus.getCustomer_Tele() %></td>
+        <td><%= cus.getCustomer_Email() %></td>
         <td>
-            <a class="button" href="user_manage.jsp?id=<%=user.getUser_name()%>">Update</a>
-          <a class="button delete-button"
-   href="<%=request.getContextPath()%>/ShowUserServlet?delete=<%=user.getUser_name()%>"
-   onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>
-
-
-
+            <a class="button" href="Views/customer_manage.jsp?nic=<%=cus.getCustomer_Nic()%>">Update</a>
+            <a class="button delete-button" href="<%=request.getContextPath()%>/ShowCustomerServlet?delete=<%=cus.getCustomer_Nic()%>" onclick="return confirm('Are you sure you want to delete this customer?');">Delete</a>
         </td>
     </tr>
     <%
             }
         } else {
     %>
-        <tr><td colspan="6" style="text-align:center;">No users found.</td></tr>
+    <tr><td colspan="7" style="text-align:center;">No customers found.</td></tr>
     <%
         }
     %>
@@ -196,21 +172,24 @@ function printOnlyTable() {
     // Clone the table
     var tableClone = document.querySelector("table").cloneNode(true);
 
-    // Remove last column from each row
+    // Remove last column (Actions) from each row
     tableClone.querySelectorAll("tr").forEach(function(row) {
-        row.deleteCell(row.cells.length - 1);
+        if (row.cells.length > 0) {
+            row.deleteCell(row.cells.length - 1);
+        }
     });
 
-    // Open new window with the table
+    // Open new print-friendly window
     var printWindow = window.open('', '', 'height=700,width=900');
-    printWindow.document.write('<html><head><title>All Users</title>');
+    printWindow.document.write('<html><head><title>Customer List</title>');
     printWindow.document.write('<style>');
     printWindow.document.write('table { width: 100%; border-collapse: collapse; font-family: Arial; }');
     printWindow.document.write('th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }');
     printWindow.document.write('th { background-color: #3498db; color: white; }');
+    printWindow.document.write('h2 { text-align: center; font-family: Arial; }');
     printWindow.document.write('</style>');
     printWindow.document.write('</head><body>');
-    printWindow.document.write('<h2 style="text-align:center;">All Registered Users Report</h2>');
+    printWindow.document.write('<h2>All Registered Customers</h2>');
     printWindow.document.write(tableClone.outerHTML);
     printWindow.document.write('</body></html>');
     printWindow.document.close();
@@ -218,6 +197,6 @@ function printOnlyTable() {
 }
 </script>
 
-</form>
+
 </body>
 </html>

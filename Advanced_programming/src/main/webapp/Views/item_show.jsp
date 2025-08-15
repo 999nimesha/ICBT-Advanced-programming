@@ -97,7 +97,7 @@
         <input type="text" name="search" placeholder="Search by item code or name..." />
         <button type="submit">Search</button>
     </form>
-    <a href="dashboard.jsp" class="form-submit"><b>Back to Dashboard</b></a>
+    <a href="<%=request.getContextPath()%>/Views/dashboard.jsp" class="form-submit"><b>Back to Dashboard</b></a>
 </div>
 
 <% if (message != null) { %>

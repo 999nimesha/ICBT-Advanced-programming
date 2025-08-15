@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import com.insert.model.ItemBean;
 import com.insert.dao.ItemDao;
-
 import java.io.IOException;
 
 @WebServlet("/item_register_InsertServlet")
@@ -33,13 +32,18 @@ public class item_register_InsertServlet extends HttpServlet {
             item.setSpecialText(specialText);
             item.setUnitPrice(unitPrice);
 
-            boolean isSaved = ItemDao.saveItem(item);
-
-            if (isSaved) {
-                response.sendRedirect("Views/item.jsp?message=success");
+            // Check duplicate item_code
+            if (ItemDao.isItemCodeExists(code)) {
+                response.sendRedirect("Views/item.jsp?message=duplicate");
             } else {
-                response.sendRedirect("Views/item.jsp?message=fail");
+                boolean isSaved = ItemDao.saveItem(item);
+                if (isSaved) {
+                    response.sendRedirect("Views/item.jsp?message=success");
+                } else {
+                    response.sendRedirect("Views/item.jsp?message=fail");
+                }
             }
+
         } catch (Exception e) {
             e.printStackTrace();
             response.sendRedirect("Views/item.jsp?message=fail");

@@ -2,42 +2,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Item Registration Form</title>
-    <link rel="stylesheet" href="../fonts/material-icon/css/material-design-iconic-font.min.css">
-    <link rel="stylesheet" href="../css/style.css">
-    <style>
-        body {
-            background-image: url('../images/registration_bg.jpg');
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            background-position: center;
-            min-height: 100vh;
-        }
-        .main {
-            background-color: rgba(255, 255, 255, 0.9);
-            padding: 40px;
-            border-radius: 15px;
-            margin-top: 50px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.2);
-        }
-        html, body {
-            height: 100%;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>Item Registration Form</title>
+<link rel="stylesheet" href="../fonts/material-icon/css/material-design-iconic-font.min.css">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+    body {
+        background-image: url('../images/registration_bg.jpg');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+        min-height: 100vh;
+    }
+    .main {
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 40px;
+        border-radius: 15px;
+        margin-top: 50px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.2);
+    }
+    html, body {
+        height: 100%;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
 </head>
 <body>
 
 <%
     String msg = request.getParameter("message");
-    if (msg == null) {
-        msg = "";
-    }
+    if (msg == null) msg = "";
 %>
 <input type="hidden" id="message" value="<%= msg %>">
 
@@ -104,11 +102,11 @@
     let msg = document.getElementById("message").value;
     if (msg === "success") {
         swal("Success", "Item added successfully!", "success")
-        .then(() => {
-            document.getElementById("register-form").reset(); // Reset form after alert
-        });
+        .then(() => document.getElementById("register-form").reset());
     } else if (msg === "fail") {
         swal("Error", "Item not added. Try again.", "error");
+    } else if (msg === "duplicate") {
+        swal("Warning", "Item Code already exists!", "warning");
     }
 </script>
 
