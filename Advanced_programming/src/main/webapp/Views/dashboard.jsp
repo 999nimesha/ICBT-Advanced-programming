@@ -101,7 +101,7 @@
 </div>
 
                     <!-- Logout Button -->
-                    <a href="logout.jsp" class="logout-btn"><i class="bi bi-box-arrow-right"></i> Logout</a>
+                    <a href="<%=request.getContextPath()%>/LogoutServlet" class="logout-btn"><i class="bi bi-box-arrow-right"></i> Logout</a>
                     
                 </div>
 
