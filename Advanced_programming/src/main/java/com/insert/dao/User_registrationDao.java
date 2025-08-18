@@ -1,6 +1,5 @@
 package com.insert.dao;
 
-// 1. Import the packages
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -15,26 +14,33 @@ public class User_registrationDao {
     private static final String USER = "root";
     private static final String PASS = "";
 
-    public boolean insertUser(UserRegisterBean user_registration) throws Exception {
-        
-        // 2. Load and register the driver
+    // ✅ 1. Check if username already exists
+    public boolean isUsernameExists(String username) throws Exception {
         Class.forName("com.mysql.cj.jdbc.Driver");
 
         try (Connection con = DriverManager.getConnection(URL, USER, PASS)) {
-
-            // First check if username already exists
             String checkSql = "SELECT COUNT(*) FROM user_registration WHERE user_name = ?";
             try (PreparedStatement checkSt = con.prepareStatement(checkSql)) {
-                checkSt.setString(1, user_registration.getUser_Name());
+                checkSt.setString(1, username);
                 try (ResultSet rs = checkSt.executeQuery()) {
-                    if (rs.next() && rs.getInt(1) > 0) {
-                        // Username already exists
-                        return false; // You can throw an exception instead if needed
+                    if (rs.next()) {
+                        return rs.getInt(1) > 0;
                     }
                 }
             }
+        }
+        return false;
+    }
 
-            // If username is not found, insert new user
+    // ✅ 2. Insert new user only if not exists
+    public boolean insertUser(UserRegisterBean user_registration) throws Exception {
+        if (isUsernameExists(user_registration.getUser_Name())) {
+            return false; // ❌ username already exists
+        }
+
+        Class.forName("com.mysql.cj.jdbc.Driver");
+
+        try (Connection con = DriverManager.getConnection(URL, USER, PASS)) {
             String sql = "INSERT INTO user_registration(user_name, user_email, user_pass, user_contact) VALUES (?, ?, ?, ?)";
             try (PreparedStatement st = con.prepareStatement(sql)) {
                 st.setString(1, user_registration.getUser_Name());
@@ -43,12 +49,12 @@ public class User_registrationDao {
                 st.setString(4, user_registration.getUser_Contact());
 
                 st.executeUpdate();
-                return true; // Successfully inserted
+                return true; // ✅ Successfully inserted
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
-            throw e; // Rethrow or handle appropriately
+            throw e;
         }
     }
 }
